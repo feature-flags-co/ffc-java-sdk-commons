@@ -2,8 +2,10 @@ package co.featureflags.commons.model;
 
 import co.featureflags.commons.json.JsonHelper;
 import com.google.common.base.MoreObjects;
+import com.google.common.reflect.TypeToken;
 
 import java.io.Serializable;
+import java.lang.reflect.Type;
 import java.util.Objects;
 
 public final class EvalDetail<T> implements Serializable {
@@ -22,6 +24,11 @@ public final class EvalDetail<T> implements Serializable {
 
     public static <T> EvalDetail<T> from(T value, int index, String reason) {
         return new EvalDetail(value, index, reason);
+    }
+
+    public static <T> EvalDetail<T> fromJson(String json, Class<T> cls) {
+        Type type = new TypeToken<EvalDetail<T>>() {}.getType();
+        return JsonHelper.deserialize(json, type);
     }
 
     public T getValue() {
