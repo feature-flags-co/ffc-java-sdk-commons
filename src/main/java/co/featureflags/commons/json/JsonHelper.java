@@ -61,7 +61,7 @@ public abstract class JsonHelper {
         return gson.toJson(o);
     }
 
-    interface AfterJsonParseDeserializable {
+    public interface AfterJsonParseDeserializable {
         void afterDeserialization();
     }
 

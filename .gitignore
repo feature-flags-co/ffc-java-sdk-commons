@@ -114,3 +114,4 @@ fabric.properties
 .idea/caches/build_file_checksums.ser
 /src/test/resources/simplelogger.properties
 /src/main/java/co/featureflags/commons/Test.java
+/.idea/git_toolbox_prj.xml
