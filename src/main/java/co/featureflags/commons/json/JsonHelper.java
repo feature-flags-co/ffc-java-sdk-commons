@@ -12,6 +12,10 @@ import java.io.IOException;
 import java.io.Reader;
 import java.lang.reflect.Type;
 
+/**
+ * serialize or deserialize ffc object to/from json
+ * this class is only for internal use
+ */
 public abstract class JsonHelper {
     private static final Gson gson = new GsonBuilder()
             .setPrettyPrinting()
@@ -24,7 +28,15 @@ public abstract class JsonHelper {
         super();
     }
 
-
+    /**
+     * deserialize ffc object from json
+     *
+     * @param json        json string
+     * @param objectClass object class
+     * @param <T>
+     * @return a ffc object
+     * @throws JsonParseException
+     */
     public static <T> T deserialize(String json, Class<T> objectClass) throws JsonParseException {
         try {
             return gson.fromJson(json, objectClass);
@@ -33,6 +45,15 @@ public abstract class JsonHelper {
         }
     }
 
+    /**
+     * deserialize ffc object from json
+     *
+     * @param json json string
+     * @param type object type
+     * @param <T>
+     * @return a ffc object
+     * @throws JsonParseException
+     */
     public static <T> T deserialize(String json, Type type) throws JsonParseException {
         try {
             return gson.fromJson(json, type);
@@ -41,6 +62,15 @@ public abstract class JsonHelper {
         }
     }
 
+    /**
+     * deserialize ffc object from Json Reader
+     *
+     * @param reader      Json Reader
+     * @param objectClass object class
+     * @param <T>
+     * @return a ffc object
+     * @throws JsonParseException
+     */
     public static <T> T deserialize(Reader reader, Class<T> objectClass) throws JsonParseException {
         try {
             return gson.fromJson(reader, objectClass);
@@ -49,6 +79,15 @@ public abstract class JsonHelper {
         }
     }
 
+    /**
+     * deserialize ffc object from Json Reader
+     *
+     * @param reader Json Reader
+     * @param type   object type
+     * @param <T>
+     * @return a ffc object
+     * @throws JsonParseException
+     */
     public static <T> T deserialize(Reader reader, Type type) throws JsonParseException {
         try {
             return gson.fromJson(reader, type);
@@ -57,14 +96,27 @@ public abstract class JsonHelper {
         }
     }
 
+    /**
+     * serialize to json
+     *
+     * @param o ffc object
+     * @return a json string
+     */
     public static String serialize(Object o) {
         return gson.toJson(o);
     }
 
+    /**
+     * interface to define action after deserialization - internal use
+     */
     public interface AfterJsonParseDeserializable {
         void afterDeserialization();
     }
 
+    /**
+     * this class is used to apply {@link AfterJsonParseDeserializable} to a ffc object
+     * see <a href="https://github.com/google/gson">gson</a>
+     */
     public static final class AfterJsonParseDeserializableTypeAdapterFactory implements TypeAdapterFactory {
         @Override
         public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> typeToken) {
@@ -72,6 +124,10 @@ public abstract class JsonHelper {
         }
     }
 
+    /**
+     * this class is used to apply {@link AfterJsonParseDeserializable} to a ffc object
+     * see <a href="https://github.com/google/gson">gson</a>
+     */
     public static final class AfterJsonParseDeserializableTypeAdapter<T> extends TypeAdapter<T> {
         private final TypeAdapter<T> typeAdapter;
 

@@ -14,23 +14,38 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * a ffc object is used to pass the FFClient and flag key name to Server SDK Wrapped API
+ */
 @JsonAdapter(VariationParams.VariationParamsTypeAdapter.class)
 public class VariationParams implements Serializable {
     private final String featureFlagKeyName;
-
     private final FFCUser user;
+
+    private final transient boolean needAll;
 
     private VariationParams(String featureFlagKeyName, FFCUser user) {
         Preconditions.checkNotNull(user, "user should not null");
-        Preconditions.checkArgument(StringUtils.isNotBlank(featureFlagKeyName), "featureFlagKeyName should not blank");
         this.featureFlagKeyName = featureFlagKeyName;
+        this.needAll = StringUtils.isBlank(featureFlagKeyName);
         this.user = user;
     }
 
+    /**
+     * build a VariationParams object
+     * @param featureFlagKeyName flag key name
+     * @param user {@link FFCUser}
+     * @return a VariationParams object
+     */
     public static VariationParams of(String featureFlagKeyName, FFCUser user) {
         return new VariationParams(featureFlagKeyName, user);
     }
 
+    /**
+     * build a VariationParams object from json string
+     * @param json json string
+     * @return a VariationParams object
+     */
     public static VariationParams fromJson(String json) {
         if (StringUtils.isNotBlank(json)) {
             return JsonHelper.deserialize(json, VariationParams.class);
@@ -38,43 +53,68 @@ public class VariationParams implements Serializable {
         return null;
     }
 
+    /**
+     * serialize a VariationParams to json string
+     * @return a json string
+     */
     public String jsonfy() {
         return JsonHelper.serialize(this);
     }
 
+    /**
+     * return a flag key name
+     * @return a string or null
+     */
     public String getFeatureFlagKeyName() {
         return featureFlagKeyName;
     }
 
+    /**
+     * return a {@link FFCUser}
+     * @return a {@link FFCUser}
+     */
     public FFCUser getUser() {
         return user;
+    }
+
+    /**
+     * if need all flags
+     * @return true if flag key name is present
+     */
+    public boolean isNeedAll() {
+        return needAll;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        VariationParams that = (VariationParams) o;
-        return Objects.equals(featureFlagKeyName, that.featureFlagKeyName) && Objects.equals(user, that.user);
+        VariationParams params = (VariationParams) o;
+        return needAll == params.needAll && Objects.equals(featureFlagKeyName, params.featureFlagKeyName) && Objects.equals(user, params.user);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(featureFlagKeyName, user);
+        return Objects.hash(featureFlagKeyName, user, needAll);
     }
 
     @Override
     public String toString() {
-        return MoreObjects.toStringHelper(this).add("featureFlagKeyName", featureFlagKeyName).add("user", user).toString();
+        return MoreObjects.toStringHelper(this)
+                .add("featureFlagKeyName", featureFlagKeyName)
+                .add("user", user)
+                .add("needAll", needAll)
+                .toString();
     }
-
 
     static class VariationParamsTypeAdapter extends TypeAdapter<VariationParams> {
         @Override
         public void write(JsonWriter out, VariationParams variationParams) throws IOException {
             out.beginObject();
-            out.name("featureFlagKeyName").value(variationParams.featureFlagKeyName);
             out.name("userKeyId").value(variationParams.user.getKey());
+            if (StringUtils.isNotBlank(variationParams.getFeatureFlagKeyName())) {
+                out.name("featureFlagKeyName").value(variationParams.getFeatureFlagKeyName());
+            }
             if (StringUtils.isNotBlank(variationParams.user.getUserName())) {
                 out.name("userName").value(variationParams.user.getUserName());
             }
