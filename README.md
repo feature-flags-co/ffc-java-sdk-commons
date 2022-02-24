@@ -29,3 +29,19 @@ System.out.println(json);
 params = VariationParams.fromJson(json);
 System.out.println(params);
 ```
+
+`FlagState` and `AllFlagStates` the 2 objects return standard retour likely we did in saas.
+Client SDK will receive the details of evaluation in these 2 objects
+```
+FlagState<Boolean> flagState = FlagState.of(res);
+json = flagState.jsonfy();
+System.out.println(json);
+flagState = flagState.fromJson(json, Boolean.class);
+System.out.println(res);
+
+AllFlagStates<Boolean> allFlagStates = AllFlagStates.of(true, null, Arrays.asList(res));
+json = allFlagStates.jsonfy();
+System.out.println(json);
+allFlagStates = AllFlagStates.fromJson(json, Boolean.class);
+System.out.println(res);
+```
