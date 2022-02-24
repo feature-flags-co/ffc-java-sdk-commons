@@ -125,7 +125,7 @@ public class VariationParams implements Serializable {
                 out.name("country").value(variationParams.user.getCountry());
             }
             if (!variationParams.user.getCustom().isEmpty()) {
-                out.name("userCustomizedProperties").beginArray();
+                out.name("customizedProperties").beginArray();
                 for (Map.Entry<String, String> entry : variationParams.user.getCustom().entrySet()) {
                     out.beginObject();
                     out.name("name").value(entry.getKey());
@@ -159,7 +159,7 @@ public class VariationParams implements Serializable {
                     case "country":
                         builder.country(in.nextString());
                         break;
-                    case "userCustomizedProperties":
+                    case "customizedProperties":
                         in.beginArray();
                         while (in.hasNext()) {
                             String name = null;

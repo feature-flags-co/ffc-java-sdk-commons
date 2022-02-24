@@ -12,7 +12,7 @@ import java.util.Objects;
  * An object returned by the SDK's "variation detail" methods such as boolVariationDetail,
  * combining the result of a flag evaluation with an explanation of how it was calculated.
  *
- * @param <T> - T cam be String, Boolean, Integer, Long, Double
+ * @param <T> - String/Boolean/Numeric Type
  */
 public final class EvalDetail<T> implements Serializable {
 
@@ -48,7 +48,7 @@ public final class EvalDetail<T> implements Serializable {
      * @param reason
      * @param keyName
      * @param name
-     * @param <T>
+     * @param <T> String/Boolean/Numeric Type
      * @return an EvalDetail
      */
     public static <T> EvalDetail<T> of(T variation,
@@ -64,7 +64,7 @@ public final class EvalDetail<T> implements Serializable {
      *
      * @param json
      * @param cls
-     * @param <T>
+     * @param <T>  String/Boolean/Numeric Type
      * @return an EvalDetail
      */
     public static <T> EvalDetail<T> fromJson(String json, Class<T> cls) {
@@ -121,13 +121,13 @@ public final class EvalDetail<T> implements Serializable {
     }
 
     /**
-     * Returns true if the flag evaluation returned the default value,
-     * rather than one of the flag's variations.
+     * Returns true if the flag evaluation returned a good value,
+     * false if the default value returned
      *
-     * @return true if the flag evaluation returned the default value
+     * @return Returns true if the flag evaluation returned a good value, false if the default value returned
      */
-    public boolean isDefaultValue() {
-        return id < 0;
+    public boolean isSuccess() {
+        return id >= 0;
     }
 
     /**
@@ -161,6 +161,10 @@ public final class EvalDetail<T> implements Serializable {
                 .add("name", name)
                 .add("keyName", keyName)
                 .toString();
+    }
+
+    public FlagState toFlagState() {
+        return FlagState.of(this);
     }
 
 }
