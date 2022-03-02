@@ -16,7 +16,7 @@ import static com.google.common.base.Preconditions.checkArgument;
  * A collection of attributes that can affect flag evaluation, usually corresponding to a user of your application.
  * The only mandatory property is the key, which must uniquely identify each user;
  * this could be a username or email address for authenticated users, or a ID for anonymous users.
- * All other built-in properties are optional， it's strongly recommended to set userName in order to search your user quickly
+ * All other built-in properties are optional, it's strongly recommended to set userName in order to search your user quickly
  * You may also define custom properties with arbitrary names and values.
  */
 
@@ -137,7 +137,9 @@ public final class FFCUser implements Serializable {
      * <pre><code>
      *     FFCClient user = new FFCClient.Builder("key")
      *               .userName("name")
-     *               .country("CN")
+     *               .country("country")
+     *               .email("email@xxx.com")
+     *               .custom("property", "value")
      *               .build()
      * </code></pre>
      */
@@ -208,7 +210,9 @@ public final class FFCUser implements Serializable {
 
         /**
          * Adds a String-valued custom attribute. When set to one of the built-in user attribute keys
-         * @param key custom attribute name
+         * the key/value pair will be ignored.
+         *
+         * @param key   custom attribute name
          * @param value custom attribute value
          * @return
          */

@@ -9,8 +9,8 @@ import java.lang.reflect.Type;
 import java.util.Objects;
 
 /**
- * An object returned by the SDK's "variation detail" methods such as boolVariationDetail,
- * combining the result of a flag evaluation with an explanation of how it was calculated.
+ * An object combines the result of a flag evaluation with an explanation of how it was calculated.
+ * This object contains the details of evaluation of feature flag.
  *
  * @param <T> - String/Boolean/Numeric Type
  */
