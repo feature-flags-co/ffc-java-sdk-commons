@@ -13,7 +13,7 @@ import java.util.Objects;
  *
  * @param <T> String/Boolean/Numeric Type
  */
-public final class AllFlagStates<T> extends BasicState implements Serializable {
+public final class AllFlagStates<T> extends BasicFlagState implements Serializable {
     private final List<EvalDetail<T>> data;
 
     private AllFlagStates(boolean success, String message, List<EvalDetail<T>> data) {

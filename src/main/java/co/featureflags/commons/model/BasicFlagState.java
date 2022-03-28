@@ -7,11 +7,11 @@ import co.featureflags.commons.json.JsonHelper;
  * success and message
  * this class and his subclasses are used to communicate between saas/server-side sdk and client side sdk
  */
-public abstract class BasicState {
+public abstract class BasicFlagState {
     protected final boolean success;
     protected final String message;
 
-    public BasicState(boolean success, String message) {
+    public BasicFlagState(boolean success, String message) {
         this.success = success;
         this.message = message;
     }
