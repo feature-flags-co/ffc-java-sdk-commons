@@ -19,7 +19,12 @@ public class UserTag implements Serializable {
     private final String source;
     private final String userProperty;
 
-    private UserTag(String requestProperty, String source, String userProperty) {
+    /**
+     * @param requestProperty tag name in http request
+     * @param source          tag source: header, query string, cookie or post body
+     * @param userProperty    tag name in {@link FFCUser}
+     */
+    public UserTag(String requestProperty, String source, String userProperty) {
         this.requestProperty = requestProperty;
         this.source = source;
         this.userProperty = userProperty;
