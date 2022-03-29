@@ -55,6 +55,45 @@ public final class FFCUser implements Serializable {
     }
 
     /**
+     * build a FFCUser from {@link UserTag}
+     *
+     * @param tags a list of user tags
+     * @return a FFCUser
+     */
+    public static FFCUser of(Map<UserTag, String> tags) {
+        Builder builder = new Builder("");
+        for (Map.Entry<UserTag, String> entry : tags.entrySet()) {
+            UserTag tag = entry.getKey();
+            String value = entry.getValue();
+            switch (tag.getUserProperty().toLowerCase()) {
+                case "keyid":
+                    builder.key(value);
+                    continue;
+                case "name":
+                    builder.userName(value);
+                    continue;
+                case "email":
+                    builder.email(value);
+                    continue;
+                case "country":
+                    builder.country(value);
+                    continue;
+                default:
+                    if (StringUtils.isNotBlank(tag.getUserProperty())) {
+                        builder.custom(tag.getUserProperty(), value);
+                    } else {
+                        builder.custom(tag.getRequestProperty(), value);
+                    }
+                    continue;
+            }
+        }
+        if (StringUtils.isBlank(builder.key)) {
+            return null;
+        }
+        return builder.build();
+    }
+
+    /**
      * returns user's name if presence
      *
      * @return a string or null
