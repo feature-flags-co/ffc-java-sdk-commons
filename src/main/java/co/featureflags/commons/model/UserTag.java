@@ -10,10 +10,10 @@ import java.util.Objects;
  */
 public class UserTag implements Serializable {
 
-    public static final String HEADER = "Header";
-    public static final String QUERY_STRING = "Query string";
-    public static final String COOKIE = "Cookie";
-    public static final String POST_BODY = "Post body";
+    public static final String HEADER = "header";
+    public static final String QUERY_STRING = "querystring";
+    public static final String COOKIE = "cookie";
+    public static final String POST_BODY = "body";
 
     private final String requestProperty;
     private final String source;
