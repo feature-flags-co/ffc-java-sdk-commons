@@ -47,11 +47,13 @@ FlagState<Boolean> flagState = FlagState.of(res);
 json = flagState.jsonfy();
 System.out.println(json);
 flagState = flagState.fromJson(json, Boolean.class);
-System.out.println(res);
+System.out.println(flagState);
 
 AllFlagStates<Boolean> allFlagStates = AllFlagStates.of(true, null, Arrays.asList(res));
 json = allFlagStates.jsonfy();
 System.out.println(json);
 allFlagStates = AllFlagStates.fromJson(json, Boolean.class);
-System.out.println(res);
+System.out.println(allFlagStates.get("key1"));
+System.out.println(allFlagStates.getData().get("key1").apply("key1"));
+System.out.println(allFlagStates);
 ```

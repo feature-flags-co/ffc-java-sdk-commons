@@ -2,23 +2,39 @@ package co.featureflags.commons.model;
 
 import co.featureflags.commons.json.JsonHelper;
 import com.google.common.base.MoreObjects;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.reflect.TypeToken;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
 
 /**
  * The object provides a standard return responding the request of getting all flag values from a client sdk
  *
  * @param <T> String/Boolean/Numeric Type
  */
-public final class AllFlagStates<T> extends BasicFlagState implements Serializable {
-    private final List<EvalDetail<T>> data;
+public class AllFlagStates<T> extends BasicFlagState implements Serializable {
+    private List<EvalDetail<T>> data;
 
-    private AllFlagStates(boolean success, String message, List<EvalDetail<T>> data) {
+    private transient Map<String, EvalDetail<T>> cache;
+
+
+    protected AllFlagStates(boolean success, String message, List<EvalDetail<T>> data) {
         super(success, success ? "OK" : message);
-        this.data = data;
+        init(data);
+    }
+
+    private void init(List<EvalDetail<T>> data) {
+        ImmutableMap.Builder<String, EvalDetail<T>> builder = ImmutableMap.builder();
+        this.data = data == null ? ImmutableList.of() : ImmutableList.copyOf(data);
+        for (EvalDetail<T> detail : data) {
+            builder.put(detail.getKeyName(), detail);
+        }
+        this.cache = builder.build();
     }
 
     /**
@@ -53,16 +69,34 @@ public final class AllFlagStates<T> extends BasicFlagState implements Serializab
      * @return a AllFlagStates
      */
     public static <T> AllFlagStates<T> fromJson(String json, Class<T> cls) {
-        return JsonHelper.deserialize(json, new TypeToken<AllFlagStates<T>>() {}.getType());
+        return JsonHelper.deserialize(json, new TypeToken<AllFlagStates<T>>() {
+        }.getType());
     }
 
     /**
      * return details of all the flags
      *
-     * @return a list of {@link EvalDetail}
+     * @return a map of flag key name and the {@link Function} to get the its {@link EvalDetail}
      */
-    public List<EvalDetail<T>> getData() {
-        return data;
+    public final Map<String, Function<String, EvalDetail<T>>> getData() {
+        ImmutableMap.Builder<String, Function<String, EvalDetail<T>>> map = ImmutableMap.builder();
+        for (EvalDetail<T> detail : data) {
+            map.put(detail.getKeyName(), this::get);
+        }
+        return map.build();
+    }
+
+    /**
+     * return a detail of a given flag key name
+     *
+     * @param flagKeyName flag key name
+     * @return an {@link EvalDetail}
+     */
+    public EvalDetail<T> get(String flagKeyName) {
+        if (cache == null || cache.isEmpty()) {
+            init(data);
+        }
+        return cache.get(flagKeyName);
     }
 
     @Override
