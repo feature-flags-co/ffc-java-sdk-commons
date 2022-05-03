@@ -56,7 +56,7 @@ public final class EvalDetail<T> implements Serializable {
                                        String reason,
                                        String keyName,
                                        String name) {
-        return new EvalDetail(variation, id, reason, keyName, name);
+        return new EvalDetail<>(variation, id, reason, keyName, name);
     }
 
     /**
@@ -163,7 +163,7 @@ public final class EvalDetail<T> implements Serializable {
                 .toString();
     }
 
-    public FlagState toFlagState() {
+    public FlagState<T> toFlagState() {
         return FlagState.of(this);
     }
 
